@@ -1,6 +1,9 @@
 var WebSocketServer = require('../node_modules/websocket').server;
 var Promise = require('../node_modules/promise');
 var jsonld = require('../node_modules/jsonld');
+//var d3 = require('../node_modules/d3');
+var request = require('request');
+
 var http = require('http');
 var fs = require('fs');
 
@@ -10,7 +13,7 @@ var server = http.createServer(function(request, response) {
     response.end();
 });
 
-var port = 9999;
+var port = 9991;
 server.listen(port, function() {
     console.log((new Date()) + ' Server is listening on port '+port);
 });
@@ -21,8 +24,8 @@ wsServer = new WebSocketServer({
 });
 
 
-wsServer.on('request', function(request) {
-	var wsConnection = request.accept('connect', request.origin);
+wsServer.on('request', function(req) {
+	var wsConnection = req.accept('connect', req.origin);
 	console.log((new Date()) + ' Connection accepted.');
 	wsConnection.on('message', function(message) {
 		if (message.type === 'utf8' && message.utf8Data !== undefined) {
@@ -36,7 +39,26 @@ wsServer.on('request', function(request) {
 			}
 			
 			/* Doe je ding */
-			console.log(JSON.stringify(data));
+			
+			if (data.request){
+				var options = {
+					url: data.request,
+					json: true,
+					headers: {
+						'Accept':'application/ld+json'
+					}
+				};
+				var callback = function (error, response, body) {
+					jsonld.flatten(response, null, function(d){
+						console.log(JSON.stringify(d));
+						wsConnection.sendUTF(JSON.stringify(d));
+					});
+				};
+				
+				request(options, callback);
+					
+			}
+			
 			
 		}
 	});
