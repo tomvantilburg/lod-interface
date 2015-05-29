@@ -1,0 +1,27 @@
+{
+  "name": "lod-interface",
+  "version": "0.0.1",
+  "homepage": "https://github.com/tomvantilburg/lod-interface",
+  "description": "Experimental library to work with linked open data",
+  "keywords": [
+    "lod",
+    "linked",
+    "open",
+    "data"
+  ],
+  "authors": [
+    "Tom van Tilburg"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.5",
+    "jsonld": "~0.3.22"
+  }
+}
